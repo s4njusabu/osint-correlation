@@ -1,0 +1,27 @@
+[
+    {
+        "tier": 2,
+        "name": "Github",
+        "url": "https://github.com/{}"
+    },
+    {
+        "tier": 2,
+        "name": "Reddit",
+        "url": "https://reddit.com/user/{}"
+    },
+    {
+        "tier": 2,
+        "name": "Twitter X",
+        "url": "https://x.com/{}"
+    },
+    {
+        "tier": 1,
+        "name": "Bluesky",
+        "url": "{}.bsky.social"
+    },
+    {
+        "tier": 1,
+        "name": "Mastodon",
+        "url": "https://mastodon.social/@{}"
+    }
+]
