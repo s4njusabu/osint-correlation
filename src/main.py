@@ -1,17 +1,49 @@
-import argparse
+import argparse, sys
+from email_validator import validate_email, EmailNotValidError
 
-# Basic workflow of the application
-def main():
+# Basic structure of the application
+
+# command [type] [target]
+# example:
+
+#    command username s4njusabu
+#    command email sanjusabu@icloud.com
+
+# ----- first iteration of the app will only include username search ----- 
+
+def cli_args():
     parser = argparse.ArgumentParser(
-        description="Cyber Sentries Open-Source Intelligence tool"
+        description="""OSINT tool with similarity checks.
+
+Username search : command username s4njusabu
+Email search    : command email sanjusabu@icloud.com""",
+        formatter_class=argparse.RawTextHelpFormatter
     )
-    parser.add_argument("action", help='Action to perform eg: "USERNAME" or "EMAIL"')
-    parser.add_argument("target", help='Target to find eg: "sanjusabu" or "sanjusabu@example.com"')
+
+    parser.add_argument("action", help='Example: "username" or "email"')
+    parser.add_argument("target", help='Example: "s4njusabu" or "peelylander". In other words the username you wanna search')
 
     args = parser.parse_args()
 
-    print(f"action: {args.action}")
-    print(f"target: {args.target}")
+    action = args.action.lower()
+
+    if action not in ["username", "email"]:
+        print('Action should be either "username" or "email"')
+        sys.exit(1)
+
+    if action == "email":
+        try:
+            email = validate_email(args.target)
+        except EmailNotValidError as e:
+            print(f"Invalid email: {e}")
+            sys.exit(1)
+    else:
+        username = args.target
+
+    if action == "username":
+        return (action, username)
+    else:
+        return (action, email.normalized)
 
 if __name__ == "__main__":
-    main()
+    print(cli_args())
