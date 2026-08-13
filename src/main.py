@@ -21,7 +21,7 @@ Email search    : command email sanjusabu@icloud.com""",
     )
 
     parser.add_argument("action", help='Example: "username" or "email"')
-    parser.add_argument("target", help='Example: "s4njusabu" or "peelylander". In other words the username you wanna search')
+    parser.add_argument("target", help='Example: "s4njusabu" or "sanjusabu@icloud.com". In other words the username or email you wanna search')
 
     args = parser.parse_args()
 
