@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).parent.parent
 SITES_FILE_PATH = ROOT_DIR / "data" / "sites.json"
 
-def check_user_availability(username: str):
+def check_username(username: str):
     with open(SITES_FILE_PATH) as file:
         sites = json.load(file)
 
@@ -23,4 +23,4 @@ def check_user_availability(username: str):
 
             print(response.status_code)
 
-check_user_availability("sanjusabu")
+check_username("sanju")
