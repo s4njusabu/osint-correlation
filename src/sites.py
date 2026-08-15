@@ -22,5 +22,4 @@ def check_username(username: str):
                 response = httpx.get(site["url"].format(username), follow_redirects=True)
 
             print(response.status_code)
-
-check_username("sanju")
+            

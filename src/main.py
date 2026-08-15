@@ -1,4 +1,5 @@
 from cli_args import cli_args
+from sites import check_username
 
 # step 1
 # ------------------------------------------------------------------------
@@ -14,4 +15,9 @@ from cli_args import cli_args
 # ------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    print(cli_args())
+    action, target = cli_args()
+
+    if action == "username":
+        check_username(target)
+    else:
+        print("Email search coming soon")
