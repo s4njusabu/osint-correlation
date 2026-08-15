@@ -1,8 +1,6 @@
 import json, httpx, requests
 from pathlib import Path
 
-
-
 ROOT_DIR = Path(__file__).parent.parent
 SITES_FILE_PATH = ROOT_DIR / "data" / "sites.json"
 
@@ -10,22 +8,43 @@ def check_username(username: str):
     with open(SITES_FILE_PATH) as file:
         sites = json.load(file)
 
-        for site in sites:
-            print(site["name"])
+    checked = 0
+    found = 0
+
+
+    for site in sites:
+        checked += 1   
+        try:
             if site["name"].lower() == "bluesky":
                 response = httpx.get(
                     "https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile",
                     params={"actor": site["url"].format(username)},
-                    follow_redirects=True
+                    follow_redirects=True,
+                    timeout=5
                 )
             else:
-                response = httpx.get(site["url"].format(username), follow_redirects=True)
+                response = httpx.get(
+                    site["url"].format(username), 
+                    follow_redirects=True, 
+                    timeout=5
+                )
+            
+        except httpx.TimeoutException:
+            print(f"  [!] {site['name']:<12} TIMEOUT")
+            continue
 
-            print(response.status_code)
-            if site["name"].lower() == "bluesky":
-                get_media_bluesky(username)
-            elif site["name"].lower() == "mastodon":
-                get_media_mastodon(username)
+        except httpx.RequestError as e:
+            print(f"  [!] {site['name']:<12} ERROR: {e}")
+            continue
+    
+        if response.status_code == 200:
+            found += 1
+            print(f"  [+] {site["name"]:<12} FOUND")
+        else:
+            print(f"  [-] {site["name"]:<12} NOT FOUND")
+
+    print(f"Result: {found} / {checked} FOUND")
+        
 
 def get_media_bluesky(username: str):
     username = f"{username}.bsky.social"
@@ -41,7 +60,7 @@ def get_media_bluesky(username: str):
         return []
 
     data = response.json()
-    info: list[dict] = []
+    info = []
 
     for item in data["feed"]:
         post = item["post"]

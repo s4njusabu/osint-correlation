@@ -1,5 +1,5 @@
 from cli_args import cli_args
-from sites import check_username
+from fetch import check_username
 
 # step 1
 # ------------------------------------------------------------------------
@@ -19,5 +19,6 @@ if __name__ == "__main__":
 
     if action == "username":
         check_username(target)
+        
     else:
         print("Email search coming soon")
