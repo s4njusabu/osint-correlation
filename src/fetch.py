@@ -11,6 +11,7 @@ def check_username(username: str):
     checked = 0
     found = 0
 
+    media_sites = 0 
 
     for site in sites:
         checked += 1   
@@ -40,10 +41,17 @@ def check_username(username: str):
         if response.status_code == 200:
             found += 1
             print(f"  [+] {site["name"]:<12} FOUND")
+            if site["name"].lower() == "bluesky":
+                media_sites += 1
+            elif site["name"].lower() == "mastodon":
+                media_sites += 1
+
         else:
             print(f"  [-] {site["name"]:<12} NOT FOUND")
 
-    print(f"Result: {found} / {checked} FOUND")
+    print(f"\n  Result: {found} / {checked} FOUND")
+
+    return media_sites
         
 
 def get_media_bluesky(username: str):
@@ -53,14 +61,14 @@ def get_media_bluesky(username: str):
     response = requests.get(url, params={
         "actor": username,
         "filter": "posts_with_media",
-        "limit": 5,
+        "limit": 1,
     })
 
     if not response.ok:
         return []
 
     data = response.json()
-    info = []
+    info: list[dict] = []
 
     for item in data["feed"]:
         post = item["post"]
@@ -78,9 +86,6 @@ def get_media_bluesky(username: str):
             "date": post["record"]["createdAt"],
             "media": image,
         })
-
-    with open("bluesky_media.json", "w") as f:
-        json.dump(info, f, indent=4)
 
     return info
 
@@ -101,7 +106,7 @@ def get_media_mastodon(username: str):
         f"https://mastodon.social/api/v1/accounts/{account_id}/statuses",
         params={
             "only_media": "true",
-            "limit": 5,
+            "limit": 1,
         },
     )
 
@@ -124,8 +129,5 @@ def get_media_mastodon(username: str):
             "date": post["created_at"],
             "media": image,
         })
-
-    with open("mastodon_media.json", "w") as f:
-        json.dump(info, f, indent=4)
 
     return info
