@@ -15,6 +15,8 @@ from compare import compare_dates
 # first iteration of the app will only include username search 
 # ------------------------------------------------------------------------
 
+DATE_THRESHOLD = 0.7
+
 if __name__ == "__main__":
     action, target = cli_args()
 
@@ -28,7 +30,11 @@ if __name__ == "__main__":
             mastodon = get_media_mastodon(target)
 
             if bluesky and mastodon:
-                compare_dates(bluesky, mastodon)
-        
+                sim = compare_dates(
+                    bluesky[0]["date"],
+                    mastodon[0]["date"]
+                )
+                if sim > DATE_THRESHOLD:
+                    print("Hehehe")
     else:
         print("Email search coming soon")
