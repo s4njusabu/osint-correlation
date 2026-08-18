@@ -43,6 +43,12 @@ if __name__ == "__main__":
                         mastodon_text
                     )
                     if text_sim > TEXT_THRESHOLD:
-                        compare_images(bluesky[0]["media"], mastodon[0]["media"])
+                        image_sim = compare_images(bluesky[0]["media"], mastodon[0]["media"])
+                        if image_sim >= 0.8:
+                            print("[+] HIGH CONFIDENCE: Bluesky and Mastodon")
+                        elif image_sim >= 0.5:
+                            print("[~] POSSIBLE MATCH: Bluesky and Mastodon")
+                        else:
+                            print("[-] LOW CONFIDENCE: Bluesky and Mastodon")
     else:
         print("Email search coming soon")

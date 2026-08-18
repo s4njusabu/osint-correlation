@@ -1,4 +1,7 @@
 from datetime import datetime
+import requests, imagehash
+from PIL import Image
+from io import BytesIO
 
 def compare_dates(date1: str, date2: str):
     d1 = datetime.fromisoformat(date1.replace("Z", "+00:00"))
@@ -24,6 +27,16 @@ def compare_texts(text1: str, text2: str):
 
     return common / max(len(words1), len(words2))
 
-
 def compare_images(image1, image2):
-    print("Never gonna run around and desert you")
+    if image1 is None or image2 is None:
+        return 0
+
+    image1 = Image.open(BytesIO(requests.get(image1).content))
+    image2 = Image.open(BytesIO(requests.get(image2).content))
+
+    hash1 = imagehash.phash(image1)
+    hash2 = imagehash.phash(image2)
+
+    difference = hash1 - hash2
+
+    return max(0, 1 - (difference / 64))
