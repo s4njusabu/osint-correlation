@@ -1,6 +1,7 @@
 from cli_args import cli_args
 from fetch import check_username, get_media_bluesky, get_media_mastodon
-from compare import compare_dates
+from compare import compare_dates, compare_texts, compare_images
+import re
 
 # step 1
 # ------------------------------------------------------------------------
@@ -16,6 +17,7 @@ from compare import compare_dates
 # ------------------------------------------------------------------------
 
 DATE_THRESHOLD = 0.7
+TEXT_THRESHOLD = 0.7
 
 if __name__ == "__main__":
     action, target = cli_args()
@@ -30,11 +32,17 @@ if __name__ == "__main__":
             mastodon = get_media_mastodon(target)
 
             if bluesky and mastodon:
-                sim = compare_dates(
+                date_sim = compare_dates(
                     bluesky[0]["date"],
                     mastodon[0]["date"]
                 )
-                if sim > DATE_THRESHOLD:
-                    print("Hehehe")
+                if date_sim > DATE_THRESHOLD:
+                    mastodon_text = re.sub("<.*?>", "", mastodon[0]["text"])
+                    text_sim = compare_texts(
+                        bluesky[0]["text"],
+                        mastodon_text
+                    )
+                    if text_sim > TEXT_THRESHOLD:
+                        compare_images(bluesky[0]["media"], mastodon[0]["media"])
     else:
         print("Email search coming soon")

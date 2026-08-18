@@ -13,7 +13,17 @@ def compare_dates(date1: str, date2: str):
     return max(0, similarity)
 
 def compare_texts(text1: str, text2: str):
-    print("Never gonna let you down")
+    words1 = text1.lower().split()
+    words2 = text2.lower().split()
+
+    common = 0
+
+    for word in words1:
+        if word in words2:
+            common += 1
+
+    return common / max(len(words1), len(words2))
+
 
 def compare_images(image1, image2):
     print("Never gonna run around and desert you")
