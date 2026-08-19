@@ -3,17 +3,14 @@ from fetch import check_username, get_media_bluesky, get_media_mastodon
 from compare import compare_dates, compare_texts, compare_images
 import re
 
-# step 1
 # ------------------------------------------------------------------------
 # BASIC STRUCTURE OF THE APPLICATION
-
+#
 # command [type] [target]
 # examples:
-
+#
 #    command username s4njusabu
 #    command email sanjusabu@icloud.com
-
-# first iteration of the app will only include username search 
 # ------------------------------------------------------------------------
 
 DATE_THRESHOLD = 0.7
